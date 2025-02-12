@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block container %}
+    <form action="/OperasBas" method="post">
+        <div style="display: flex;">
+            <div>
+                <label for="n1">N1:</label>
+                <input type="text" id="n1" name="n1" required><br>
+                <label for="n2">N2:</label>
+                <input type="text" id="n2" name="n2" required><br>
+            </div>
+            <div style="margin-left: 20px;">
+                <label>Operación:</label><br>
+                <label for="sumar">
+                    <input type="radio" id="sumar" name="operacion" value="sumar" required> Sumar
+                </label><br>
+                <label for="restar">
+                    <input type="radio" id="restar" name="operacion" value="restar"> Restar
+                </label><br>
+                <label for="multiplicar">
+                    <input type="radio" id="multiplicar" name="operacion" value="multiplicar"> Multiplicar
+                </label><br>
+                <label for="dividir">
+                    <input type="radio" id="dividir" name="operacion" value="dividir"> Dividir
+                </label><br>
+            </div>
+        </div>
+        <input type="submit" value="Calcular">
+    </form>
+
+    {% if resultado %}  <p>Resultado: {{ resultado }}</p>
+    {% endif %}
+
+{% endblock %}
