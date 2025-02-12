@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CinepolisPython</title>
+</head>
+<body>
+    <h1>Cinepolis</h1>
+    <form method="POST">
+        <h2>Entradas</h2>
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" required><br><br>
+
+        <label for="cantidad_boletos">Cantidad de Boletos:</label>
+        <input type="number" name="cantidad_boletos" id="cantidad_boletos" min="1" max="7" required><br><br>
+
+        <input type="checkbox" name="tarjeta" id="tarjeta">
+        <label for="tarjeta">¿Usas Tarjeta Cineco?</label><br><br>
+
+        <button type="submit">Procesar</button>
+
+        {% if total %}
+            <h2>Salidas</h2>
+            <p><strong>Nombre:</strong> {{ nombre }}</p>
+            <p><strong>Cantidad de Boletos:</strong> {{ cantidad_boletos }}</p>
+            <p><strong>¿Usaste Tarjeta Cineco?:</strong> {% if usa_tarjeta %} Sí {% else %} No {% endif %}</p>
+            <p><strong>Total a Pagar:</strong> ${{ total:.2f }}</p>
+        {% endif %}
+
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+    </form>
+</body>
+</html>
