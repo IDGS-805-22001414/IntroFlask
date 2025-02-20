@@ -1,0 +1,83 @@
+
+{% block content %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+       
+        <!-- Formulario -->
+        <div class="col-md-5">
+            <form method="POST" class="p-4 border rounded-4 shadow-sm bg-light">
+                <h4 class="fw-bold text-center mb-4">Descubre tu signo zodiacal chino Ingresa tus datos :</h4>
+                {{ form.hidden_tag() }}
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        {{ form.nombre.label(class="form-label fw-semibold") }}
+                        {{ form.nombre(class="form-control form-control-sm rounded-3") }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        {{ form.apellido.label(class="form-label fw-semibold") }}
+                        {{ form.apellido(class="form-control form-control-sm rounded-3") }}
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mt-4">Fecha de nacimiento</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        {{ form.dia.label(class="form-label") }}
+                        {{ form.dia(class="form-control form-control-sm rounded-3", type="number") }}
+                    </div>
+                    <div class="col-4">
+                        {{ form.mes.label(class="form-label") }}
+                        {{ form.mes(class="form-control form-control-sm rounded-3", type="number") }}
+                    </div>
+                    <div class="col-4">
+                        {{ form.anio.label(class="form-label") }}
+                        {{ form.anio(class="form-control form-control-sm rounded-3", type="number") }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Sexo:</label>
+                    <div class="d-flex gap-3">
+                        {% for subfield in form.sexo %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input") }}
+                                {{ subfield.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm">IMPRIMIR</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Resultado -->
+        {% if resultado %}
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="p-4 border rounded-4 shadow text-center bg-white">
+                <h4 class="fw-bold">Hola <span class="fst-italic">{{ resultado.nombre }} {{ resultado.apellido }}</span></h4>
+                <p class="mt-3 fs-5">Tienes <span class="fw-bold text-primary">{{ resultado.edad }}</span> años</p>
+                <p class="fs-5">Tu signo zodiacal chino es:</p>
+                <h5 class="fw-bold text-capitalize">{{ resultado.signo }}</h5>
+                {% if resultado.imagen %}
+                    <div class="d-flex justify-content-center mt-3">
+                        <img src="{{ resultado.imagen }}" alt="Signo zodiacal" width="130" class="rounded-circle border shadow">
+                    </div>
+                {% else %}
+                    <p class="text-danger">Imagen no disponible</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
