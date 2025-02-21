@@ -1,9 +1,57 @@
 
-
+from datetime import datetime
+from forms import ZodiacoForm
 from flask import Flask, render_template, request, redirect, url_for
-
 import forms
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, RadioField, SubmitField
+from wtforms.validators import DataRequired, NumberRange
+from flask import g
+from flask_wtf.csrf import CSRFProtect
 
+from datetime import date
+from flask import Flask
+from flask import flash 
+import forms 
+
+
+app = Flask(__name__)
+app.secret_key= 'alonMtz'
+csrf=CSRFProtect()
+
+
+@app.errorhandler(404)
+def page_not_found (e):
+    return render_template("404.html") , 404 
+
+@app.before_request
+def before_request():
+    g.nombre="Mario"
+    print("before 1")
+
+@app.after_request
+def after_request(response):
+    print("after 1")
+    return response 
+
+class ZodiacoForm(FlaskForm):
+    nombre = StringField("Nombre", validators=[DataRequired()])
+    apellido = StringField("Apellido", validators=[DataRequired()])
+    anio = IntegerField("Año de nacimiento", validators=[DataRequired(), NumberRange(1900, 2025)])
+    submit = SubmitField("Calcular Signo")
+
+def calcular_signo_chino(anio):
+    signos = [
+        "Rata", "Buey", "Tigre", "Conejo", "Dragón", "Serpiente",
+        "Caballo", "Cabra", "Mono", "Gallo", "Perro", "Cerdo"
+    ]
+    imagenes = [
+        "rata.png", "buey.png", "tigre.png", "conejo.png", "dragon.png",
+        "serpiente.png", "caballo.png", "cabra.png", "mono.png", 
+        "gallo.png", "perro.png", "cerdo.png"
+    ]
+    indice = anio % 12
+    return signos[indice], imagenes[indice]
 
 
 #Clase CinepolisPython
@@ -150,21 +198,51 @@ def operas():
     return render_template("OperasBas.html", resultado=resultado)
 
 
-@app.route("/alumnos", methods=["GET","POST"]) 
+@app.route("/alumnos", methods = ["GET", "POST"])
 def alumnos():
-    mat=""
-    nom=""
-    ape=""
-    email=""
-    alumno_calse=forms.UserForm(request.form)
-    if request.method=="POST":
-        mat=alumno_calse.matricula.data
-        ape=alumno_calse.apellido.data
-        nom=alumno_calse.nombre.data
-        email=alumno_calse.email.data
-        print('Nombre: {}'.format(nom)) 
-        return render_template("Alumnos.html" , form=alumno_calse)    
+    print("alumno {}".format(g.nombre))
+    mat=''
+    nom=''
+    ape=''
+    email=''
+    alumno_clase=forms.UserForm(request.form)
+    if request.method=="POST" and alumno_clase.validate():
+        mat = alumno_clase.matricula.data
+        nom = alumno_clase.nombre.data
+        ape = alumno_clase.apellido.data
+        email = alumno_clase.email.data
+        mensaje="Bienvenido {}".format(nom)
+        flash(mensaje)
+    return render_template("Alumnos.html", form=alumno_clase, mat=mat, nom=nom, ape=ape, email=email)
+
+@app.route("/zodiaco", methods=["GET", "POST"])
+def zodiaco():
+    form = ZodiacoForm()
+    resultado = None
+
+    if form.validate_on_submit():
+        nombre = form.nombre.data
+        apellido = form.apellido.data
+        anio = form.anio.data
+
+        edad = datetime.now().year - anio
+        signo, imagen = calcular_signo_chino(anio)
+
+        resultado = {
+            "nombre": nombre,
+            "apellido": apellido,
+            "edad": edad,
+            "signo": signo,
+            "imagen": imagen
+        }
+
+    return render_template("zodiacoChino.html", form=form, resultado=resultado)
+   
     
 # Ejecutar la aplicación
 if __name__ == "__main__":
+    csrf.init_app(app)
     app.run(debug=True, port=3000)
+
+
+

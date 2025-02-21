@@ -3,7 +3,7 @@ from wtforms import StringField, IntegerField, RadioField, SubmitField
 from wtforms.validators import DataRequired, NumberRange, Email
 
 class UserForm(FlaskForm):
-    nombre = StringField("Nombre", validators=[DataRequired()])
+    nombre= StringField("Nombre", validators=[DataRequired()])
     apellido = StringField("Apellido", validators=[DataRequired()])
     matricula = StringField("Matrícula", validators=[DataRequired()])
     email = StringField("Correo", validators=[DataRequired(), Email()])
